@@ -78,7 +78,7 @@ const openaiChat = async (userText) => {
       temperature: 0.4,
       max_tokens: 140
     },
-    { headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" } }
+    { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" } }
   );
 
   return rsp.data.choices?.[0]?.message?.content?.trim() || "わかった。続けて話して。";
@@ -126,3 +126,4 @@ app.post("/callback", async (req, res) => {
 
 app.get("/", (_req, res) => res.send("ok"));
 app.listen(3000, () => console.log("listening on 3000"));
+

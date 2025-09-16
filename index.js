@@ -26,6 +26,10 @@ const replyMessage = async (replyToken, messages) => {
 
 // ====== OpenAI (Responses) ======
 const openaiChat = async (userText) => {
+  if (!OPENAI_API_KEY) {
+    throw new Error("Missing OPENAI_API_KEY");
+  }
+
   const crisis = /(死にたい|消えたい|自殺|リスカ|もうだめ|おわり)/i.test(userText);
 
   if (crisis) {
@@ -74,7 +78,7 @@ const openaiChat = async (userText) => {
       temperature: 0.4,
       max_tokens: 140
     },
-    { headers: { Authorization: `Bearer ${OPENAI_API_KEY}` } }
+    { headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" } }
   );
 
   return rsp.data.choices?.[0]?.message?.content?.trim() || "わかった。続けて話して。";
@@ -107,6 +111,11 @@ app.post("/callback", async (req, res) => {
 
         await replyMessage(ev.replyToken, messages);
       } catch (e) {
+        console.error(
+          "OPENAI/LINE ERROR:",
+          e.response?.status || e.code || e.name,
+          e.response?.data || e.message
+        );
         await replyMessage(ev.replyToken, [
           { type: "text", text: "すまない、少し調子が悪い。もう一度だけ送ってくれるか。" }
         ]);

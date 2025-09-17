@@ -1,5 +1,10 @@
 {
   "version": 2,
   "builds": [{ "src": "index.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/index.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "/index.js" }],
+  "crons": [
+    { "path": "/cron/morning",    "schedule": "0 22 * * *" },
+    { "path": "/cron/nooncheck",  "schedule": "0 3 * * *"  },
+    { "path": "/cron/eveningcheck","schedule": "0 12 * * *" }
+  ]
 }
